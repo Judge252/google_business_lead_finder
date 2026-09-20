@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Business lead finder powered by Google Places API and public website contact enrichment." />
+  <title>LeadMap — Business Lead Finder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">LM</div>
+        <div>
+          <div class="brand-name">LeadMap</div>
+          <div class="brand-sub">Business prospecting</div>
+        </div>
+      </div>
+
+      <div class="side-card">
+        <div class="side-kicker">Workflow</div>
+        <div class="flow-step active"><span>1</span> Search businesses</div>
+        <div class="flow-step"><span>2</span> Enrich contacts</div>
+        <div class="flow-step"><span>3</span> Score leads</div>
+        <div class="flow-step"><span>4</span> Export CSV</div>
+      </div>
+
+      <div class="side-note">
+        <strong>Responsible prospecting</strong>
+        <p>Uses Google Places API and public business contact pages. Respect opt-outs and local outreach rules.</p>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">B2B LEAD DISCOVERY</div>
+          <h1>Find businesses worth contacting.</h1>
+          <p>Search a service + location, enrich public contact channels, and prioritize the strongest leads.</p>
+        </div>
+        <div id="apiStatus" class="status-pill neutral">Checking API…</div>
+      </header>
+
+      <section class="search-card">
+        <form id="searchForm">
+          <div class="field grow">
+            <label for="service">Service / business type</label>
+            <input id="service" name="service" autocomplete="off" placeholder="e.g. dental clinics" value="dental clinics" required />
+          </div>
+          <div class="field grow">
+            <label for="location">Location</label>
+            <input id="location" name="location" autocomplete="off" placeholder="e.g. Cairo, Egypt" value="Cairo, Egypt" required />
+          </div>
+          <div class="field compact">
+            <label for="maxResults">Results</label>
+            <select id="maxResults">
+              <option value="20">20</option>
+              <option value="40">40</option>
+              <option value="60">60</option>
+            </select>
+          </div>
+          <button id="searchButton" class="primary" type="submit">
+            <span>Find leads</span>
+          </button>
+
+          <label class="check-row">
+            <input id="enrich" type="checkbox" checked />
+            <span>
+              <strong>Enrich public website contacts</strong>
+              <small>Checks a few allowed public pages for business inboxes, WhatsApp and social links.</small>
+            </span>
+          </label>
+        </form>
+      </section>
+
+      <section id="progressPanel" class="progress-card hidden">
+        <div class="spinner"></div>
+        <div>
+          <strong id="progressTitle">Finding businesses…</strong>
+          <p id="progressText">Google Places is returning matching businesses.</p>
+        </div>
+      </section>
+
+      <section id="errorPanel" class="error-card hidden"></section>
+
+      <section id="resultsSection" class="hidden">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span>Leads</span>
+            <strong id="statLeads">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>With phone</span>
+            <strong id="statPhones">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>Business email</span>
+            <strong id="statEmails">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>WhatsApp</span>
+            <strong id="statWhatsApp">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>Average score</span>
+            <strong id="statScore">0</strong>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <input id="filterInput" placeholder="Filter name, address, category…" />
+            <select id="scoreFilter">
+              <option value="0">Any score</option>
+              <option value="50">Score 50+</option>
+              <option value="70">Score 70+</option>
+              <option value="85">Score 85+</option>
+            </select>
+            <label class="mini-check">
+              <input id="contactOnly" type="checkbox">
+              <span>Contactable only</span>
+            </label>
+          </div>
+          <button id="exportButton" class="secondary">Export CSV</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Score</th>
+                <th>Business</th>
+                <th>Contact</th>
+                <th>Public web contacts</th>
+                <th>Rating</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+        <div id="emptyFilter" class="empty-state hidden">No leads match the current filters.</div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
